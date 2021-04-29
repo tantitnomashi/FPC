@@ -1,0 +1,26 @@
+[
+    {
+        "status": 0,
+        "statusName": "REQUESTING"
+    },
+    {
+        "status": 1,
+        "statusName": "ACCEPTED"
+    },
+    {
+        "status": 2,
+        "statusName": "RENTING"
+    },
+    {
+        "status": 3,
+        "statusName": "FINISHED"
+    },
+    {
+        "status": 4,
+        "statusName": "CANCELED"
+    },
+    {
+        "status": 5,
+        "statusName": "EXPIRED"
+    }
+]

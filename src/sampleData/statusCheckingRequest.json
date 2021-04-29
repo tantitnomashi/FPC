@@ -1,0 +1,14 @@
+[
+    {
+        "type": 1,
+        "name": "Check Box"
+    },
+    {
+        "type": 0,
+        "name": "Check Connection"
+    },
+    {
+        "type": 2,
+        "name": "Check Expired Items"
+    }
+]

@@ -2,7 +2,7 @@
   "name": "datta-able-rv18.0.4",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://lite.codedthemes.com/datta-able/react/default/",
+  "homepage": "http://lite.codedthemes.com/",
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "axios": "^0.21.1",

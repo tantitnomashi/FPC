@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const ngrokID = 'c4a827e90fcc'
 const route_api = 'https://' + ngrokID + '.ngrok.io'
-const newRoute = "http://40.123.255.174"
+const newRoute = "https://40.123.255.174"
 const instance = axios.create({
 	baseURL: `${newRoute}/api`,
 	timeout: 5000,

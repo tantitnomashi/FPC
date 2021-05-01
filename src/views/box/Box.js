@@ -9,6 +9,7 @@ import { element } from 'prop-types';
 import { useDispatch } from 'react-redux';
 import BoxDetail from './BoxDetail';
 import { NotificationManager } from 'react-notifications';
+import { waiting } from '../../utils/waiting';
 
 
 const MAX_PADDING = 2;
@@ -32,6 +33,7 @@ export default function Box({ match }) {
 
     useEffect(() => {
         console.log("### Reload data..")
+        waiting.setWait(true);
         loadDataRendering();
     }, []);
 
@@ -77,7 +79,9 @@ export default function Box({ match }) {
                 } else {
                     NotificationManager.error('Cannot get template! Please check the network again!', 'Load data');
                 }
-            }).catch(e => NotificationManager.error('Cannot get template! Please check the network again!', 'Load data'));
+            }).catch(e => {
+                NotificationManager.error('Cannot get template! Please check the network again!', 'Load data')
+            });
     }
     const setOpenForm = (currentBox) => {
         setOpen(true);
@@ -170,6 +174,10 @@ export default function Box({ match }) {
                 boxView.push(BoxItem(items, e1, e1.w, e1.h));
             })
         });
+
+        // render
+        waiting.setWait(false);
+
         return view;
     }
 
@@ -209,7 +217,7 @@ export default function Box({ match }) {
                             <Row className="text-dark py-3 px-1 my-2 border-bottom border-light">
 
                                 <Col md={3} className='text-left mt-3' >
-                                    <Card.Title>{currentCabinet?.name}</Card.Title>
+                                    <Card.Title>{"ID: " + currentCabinet?.id + " - " + currentCabinet?.name}</Card.Title>
                                     <Card.Text>
                                         {currentCabinet?.location.buildingName}
                                     </Card.Text>

@@ -10,6 +10,9 @@ import Aux from "../hoc/_Aux";
 import ScrollToTop from './layout/ScrollToTop';
 import routes from "../route";
 import { NotificationContainer } from 'react-notifications';
+import LoadingOverlay from 'react-loading-overlay'
+import BounceLoader from 'react-spinners/BounceLoader'
+import { waiting } from '../utils/waiting';
 
 const AdminLayout = Loadable({
     loader: () => import('./layout/AdminLayout'),
@@ -21,11 +24,24 @@ class App extends Component {
         super(props);
         this.state = {
             showNotification: false,
+            waiting: false,
             contentNotification: {
                 title: "",
                 message: ""
             }
         }
+        waiting.initStatus(
+            (status) => {
+                this.setState((prev) => ({
+                    ...prev,
+                    waiting: status,
+                }))
+            },
+            () => {
+                return this.state.waiting
+            }
+
+        );
     }
     render() {
         const menu = routes.map((route, index) => {
@@ -43,17 +59,24 @@ class App extends Component {
 
         return (
             <div>
-                <NotificationContainer />
-                <Aux>
-                    <ScrollToTop>
-                        <Suspense fallback={<Loader />}>
-                            <Switch>
-                                {menu}
-                                <Route path="/" component={AdminLayout} />
-                            </Switch>
-                        </Suspense>
-                    </ScrollToTop>
-                </Aux>
+
+                <LoadingOverlay
+                    active={this.state.waiting}
+                    spinner={<BounceLoader />}
+                >
+                    <NotificationContainer />
+                    <Aux>
+                        <ScrollToTop>
+                            <Suspense fallback={<Loader />}>
+                                <Switch>
+                                    {menu}
+                                    <Route path="/" component={AdminLayout} />
+                                </Switch>
+                            </Suspense>ß
+                        </ScrollToTop>
+                    </Aux>
+                </LoadingOverlay>
+
             </div>
         );
     }

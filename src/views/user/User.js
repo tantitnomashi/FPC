@@ -148,9 +148,6 @@ export default function Dashboard() {
                                                     {user?.roleId == 2 && <i class="fa fa-id-badge fa-2x" aria-hidden="true"></i>}
                                                     {user?.roleId == 3 && <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>}
                                                     {user?.roleId == 1002 && <i class="fa  fa-cart-plus fa-2x" aria-hidden="true"></i>}
-
-
-
                                                 </td>
                                                 <td>
                                                     <h6 className="mb-1">{user.fullName}</h6>

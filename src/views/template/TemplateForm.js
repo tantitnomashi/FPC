@@ -7,16 +7,37 @@ import { NotificationManager } from 'react-notifications';
 
 const MAX_PADDING = 2;
 const SIZE = 4;
+const MAX_COL = "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr";
+const MAX_ROW = "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr";
+const MAX_COL_NUM = 10;
+const MAX_ROW_NUM = 10;
+const COLOR_CATE = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
+    'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red',
+    'silver', 'teal', 'white', 'yellow'];
+let indexLayout = -1;
+let selectedSize = {};
+let isAddCompleted = true;
 export default function TemplateForm(props) {
     const { open, handleClickClose, currentProfile } = props;
     const [preTemplate, setPreTemplate] = useState({});
     const [boxAmount, setBoxAmount] = useState(4);
-    const [arrBox, setArrBox] = useState([]);
     const [size, setSize] = React.useState([]);
-    const [selectedSize, setSelectedSize] = React.useState([]);
-    const [dataTemplateArr, setDataTempleteArr] = useState([]);
+
+
+    // for grid
+    const [arrView, setArrView] = useState([]);
+    const [dataArrView, setDataArrView] = useState([]);
+
+
+
+
+
+
     useEffect(() => {
+        indexLayout = -1;
+        isAddCompleted = true;
         loadAdminBoxSize();
+        handleAddBoxToCabinet([])
     }, []);
 
     // const [exampleTemplate, setExampleTemplate] = useState({});
@@ -27,6 +48,7 @@ export default function TemplateForm(props) {
                 if (response.data.statusCode == 200) {
                     console.log('load size ', response.data.data);
                     setSize(response.data.data);
+                    selectedSize = response.data.data[0];
                 } else {
                     alert('Cant get Cabi !')
                 }
@@ -41,169 +63,141 @@ export default function TemplateForm(props) {
         setBoxAmount(amount);
 
     }
-    const handleAddBoxToCabinet = () => {
+
+    const handleRenderBoxDesign = (cellNum) => {
+        let currentData = dataArrView;
+        // currentData.push({
+        //     index: i,
+        //     virtualHeight: selectedSize.virtualHeight,
+        //     virtualWidth: selectedSize.virtualWidth,
+        // });
+        if (!isAddCompleted) {
+
+        } else {
+            indexLayout++;
+            isAddCompleted = false;
+        }
+        if (indexLayout == -1) {
+            currentData.push({
+                index: cellNum,
+                boxNum: 1,
+                sizeId: selectedSize.id,
+                virtualHeight: selectedSize.virtualHeight,
+                virtualWidth: selectedSize.virtualWidth,
+                topLeft: (Math.floor(cellNum / MAX_COL_NUM) + 1) + "," + ((cellNum % MAX_ROW_NUM) + 1)
+            });
+            ++indexLayout;
+        } else {
+            currentData[indexLayout] = {
+                index: cellNum,
+                boxNum: indexLayout + 1,
+                sizeId: selectedSize.id,
+                virtualHeight: selectedSize.virtualHeight,
+                virtualWidth: selectedSize.virtualWidth,
+                topLeft: (Math.floor(cellNum / MAX_COL_NUM) + 1) + "," + ((cellNum % MAX_ROW_NUM) + 1)
+
+            }
+        }
+        console.log("dang chay i:", selectedSize);
+        setDataArrView(currentData);
+        handleAddBoxToCabinet(currentData);
+
+    }
+    const handleAddBoxToCabinet = (dataArrView) => {
+        console.log("Inside handle render")
         let arr = [];
+        let dataView = []
+        dataArrView.map((val, index) => {
 
-        for (var i = 0; i < boxAmount; i++) {
-
-            let sampleDiv = <div>
-                <Row className="py-2">
-
-                    <Col md={3} xl={3} style={{
-                        display: 'flex',
-                        alignItems: "center",
-                        fontSize: "1.2em"
-                    }}>Box {i + 1} </Col>
-                    <Col md={6} xl={4}>
-
-                        <div className="btn-group" role="group">
-
-                            <select id={"size" + i} class="form-select" aria-label="Default select example">
-                                {
-
-                                    size?.map((value, index) =>
-                                        <option value={value.id} selected={index == 0 ? true : false}>{value.sizeName}</option>
-                                    )
-                                }
-                            </select>
-                        </div>
-                    </Col>
-                    <Col md={3} xl={4}>
-                        <div className="btn-group d-flex align-items-center justify-content-start" role="group">
-                            <label htmlFor={"position" + i} className="mr-2">Position</label>
-                            <input type="text" className="form-control" name={'position' + i} id={"position" + i} />
-                        </div>
-                    </Col>
-                </Row>
-
-            </div>
-            arr.push(sampleDiv);
-        }
-
-        setArrBox(arr);
-
-    }
-    const handlePreview = () => {
-        let boxConfigs = [];
-
-        for (var i = 0; i < boxAmount; i++) {
-            var e = document.getElementById("size" + i);
-            var value = e.options[e.selectedIndex].value;
-            let demoConfigs = {
-                boxSizeTypeId: parseInt(value),
-                topLeftPosition: document.getElementById('position' + i).value,
-                boxNum: i + 1
+            let currentIndex = val.index;
+            for (let i = 0; i < val.virtualHeight; i++) {
+                for (let j = 0; j < val.virtualWidth; j++) {
+                    dataView.push({
+                        index: currentIndex + i + j,
+                        color: (index % 2) == 1 ? "#f3ff0a" : "#aeff0d",
+                        name: index + 1
+                    })
+                }
+                currentIndex += MAX_COL_NUM - 1;
             }
-            boxConfigs.push(demoConfigs);
-        }
-
-        let previewTemplate = {
-            name: document.getElementById('name').value,
-            boxCnt: parseInt(boxAmount),
-            imgUrl: 'https://picsum.photos/300/400',
-            boxConfigurations: boxConfigs,
-
-        }
-        let maxColumn = 0;
-        let maxRow = 0;
-
-
-        previewTemplate.boxConfigurations.map((c) => {
-            let index = c.topLeftPosition.indexOf(",");
-            let row = parseInt(c.topLeftPosition.substr(0, index), 10);
-            let col = parseInt(c.topLeftPosition.substr(index + 1, c.topLeftPosition.length), 10);
-            if (maxColumn < col) {
-                maxColumn = col;
-            }
-
-            if (maxRow < row) {
-                maxRow = row;
-            }
-
         })
-        previewTemplate.rowsCnt = maxRow;
-        previewTemplate.colsCnt = maxColumn;
+        for (let i = 0; i < MAX_COL_NUM * MAX_ROW_NUM; i++) {
+            let hadBox = false;
+            let e = (<div style={{
+                width: "50px",
+                height: "50px",
+                display: "flex",
+                margin: "0",
+                border: "1px solid gray"
+            }}
+                onClick={() => handleRenderBoxDesign(i)}
 
 
-        console.log("### Box Configs:", previewTemplate);
-        let dataView = generateView(previewTemplate);
-        setDataTempleteArr(dataView);
-        setPreTemplate(previewTemplate);
+            >
+                {dataView.map((val, index, arr) => {
+                    if (val.index == i) {
+                        hadBox = true;
+                        return (<div style={{
+                            backgroundColor: val.color,
+                            flex: 1
+                        }}> {val.name}
+
+                        </div>)
+                    }
+                })}
+                {/* {!hadBox && <div style={{ backgroundColor: "red" }}></div>} */}
+
+            </div>);
+            arr.push(e);
+        }
+
+        setArrView(arr);
     }
+    const handleBackChange = () => {
+        if (indexLayout == -1) {
+            return
+        }
+        indexLayout--;
+        let currentData = dataArrView;
+        currentData.pop();
+        setDataArrView(currentData);
+        handleAddBoxToCabinet(currentData);
+    }
+
+
 
     const sumbitFormTemplate = () => {
+
+
+        let boxConfig = dataArrView.map((value, index) => {
+            let box = {
+                boxSizeTypeId: value.sizeId,
+                topLeftPosition: value.topLeft,
+                boxNum: value.boxNum
+            }
+            return box;
+
+        });
+
+        console.log("##### BOX CONFIG", boxConfig);
+
+        let tmp = {
+            boxCnt: dataArrView.length,
+            rowsCnt: 0,
+            colsCnt: 0,
+            name: "string",
+            imgUrl: "string",
+            boxConfigurations: boxConfig
+
+        }
 
         // API.createCabinetTemplate(preTemplate).then((response) => {
         //     console.log("create: ", response.data.statusCode);
         // }).catch(e => console.log("###create Cabinet Template ERR", e));
         NotificationManager.warning('Create template!', 'Delete Cabinet');
-
-        handleClickClose();
-    }
-    const generateView = (exampleTemplate) => {
-        let view = [];
-        let data4View = [];
-        console.log("##Generate view ....");
-        console.log("##Generate current example", exampleTemplate);
-        for (let i = 0; i < exampleTemplate.colsCnt; i++) {
-            view.push([]);
-            data4View.push([]);
-        }
-
-        exampleTemplate.boxConfigurations.map((c) => {
-            let index = c.topLeftPosition.indexOf(",");
-            let top = parseInt(c.topLeftPosition.substr(0, index), 10);
-            let left = parseInt(c.topLeftPosition.substr(index + 1, c.topLeftPosition.length), 10);
-
-            let boxView = data4View[left - 1];
-            let found = size.find(element => element.id == c.boxSizeTypeId);
-            console.log('###found', found);
-            let numBox = (found.actualHeight) / 30;
-            boxView.push({
-                id: c.id,
-                name: c.boxNum,
-                sizeName: found.sizeName,
-                top: top,
-                numBox: numBox,
-                w: found.actualWidth,
-                h: found.actualHeight// + ((numBox - 1) * MAX_PADDING / 2)
-            });
-
-        });
-
-        data4View.map((e, i) => {
-            let currentIndex = 1;
-            e.map((e1, iArr) => {
-                let boxView = view[i];
-                let indexTmp = e1.numBox;
-                if (e1.top != currentIndex) {
-                    for (let iL = 0; iL < e1.top - currentIndex; iL++) {
-
-                        boxView.push(BoxItem('Hub', iArr, 30, 30));
-                    }
-                    currentIndex = e1.top;
-                }
-                currentIndex += indexTmp;
-
-                boxView.push(BoxItem('Box ' + e1.name, e1, e1.w, e1.h));
-            })
-        });
-        return view;
+        // handleClickClose();
     }
 
-    const BoxItem = (data, e, w, h) => {
-
-        return <div id={e.id} style={{ padding: `${MAX_PADDING}px`, width: `${w * SIZE}px`, height: `${h * SIZE}px` }}>
-            <div className="bg-warning w-100 h-100 d-flex align-items-center" >
-                <h3 className="text-center mx-auto">  {data}</h3>
-
-            </div>
-        </div>
-        // }
-    }
-
-
-    console.log(currentProfile);
 
     return (
 
@@ -242,35 +236,76 @@ export default function TemplateForm(props) {
                                      </Form.Control.Feedback>
                             </InputGroup>
 
+                            <Col md={6} xl={4}>
 
 
-                            <Button onClick={handleAddBoxToCabinet} variant="dark">
-                                Generate
+                                <div className="btn-group" role="group">
+
+                                    <select id={"size"} class="form-select" onChange={(val) => {
+                                        size?.map((value, index) => {
+                                            if (val.target.value == value.id) {
+                                                console.log(value);
+                                                selectedSize = value;
+                                            }
+                                        })
+
+                                    }} aria-label="Default select example">
+                                        {
+
+                                            size?.map((value, index) =>
+                                                <option value={value.id} selected={index == 0 ? true : false}>{value.sizeName}</option>
+                                            )
+                                        }
+                                    </select>
+                                </div>
+                            </Col>
+
+                            <Button variant="dark" onClick={() => {
+                                isAddCompleted = true;
+                                console.log(dataArrView[dataArrView.length - 1]);
+
+                            }}>
+                                Add New Box
                                  </Button>
-                            <Button onClick={handlePreview} variant="primary">
+
+                            <Button variant="dark" onClick={handleBackChange}>
+                                Back
+                                 </Button>
+                            {/* <Button onClick={handlePreview} variant="primary">
                                 Preview
-                            </Button>
+                            </Button> */}
 
-
-                            <div style={{ overflowY: 'scroll', overflowX: 'hidden', maxHeight: '400px' }}>
-                                {
-                                    arrBox.map((value, index) => value)
-                                }
-                            </div>
 
 
 
                         </Col>
 
+
+                        {/* the right part of create form */}
                         <Col md={4} xl={5}>
-                            <div className="d-flex flex-row">
+
+                            {/* <div style={{ overflowY: 'scroll', overflowX: 'hidden', maxHeight: '400px' }}>
                                 {
-                                    dataTemplateArr.map((e, i) => (
-                                        <div key={i}>
-                                            {e.map((b) => b)}
-                                        </div>
-                                    ))
+                                    arrBox.map((value, index) => value)
                                 }
+                            </div> */}
+                            <div style={{
+                                border: "2px dashed grey",
+                                padding: "2px"
+                            }}>
+
+                                <div style={{
+                                    display: "grid",
+                                    height: "500px",
+                                    gridTemplateColumns: MAX_COL,
+                                    gridTemplateRows: MAX_ROW
+                                }}>
+                                    {
+                                        arrView.map(val => {
+                                            return val;
+                                        })
+                                    }
+                                </div>
                             </div>
 
                         </Col>

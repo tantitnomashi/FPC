@@ -111,9 +111,7 @@ export default function BoxHistory(props) {
                                                             {++index}
                                                         </td>
                                                         <td className="col-md-3 ">
-                                                            {!(item.operationType) && <span className="text-danger">CLOSE</span>}
-
-                                                            {(item.operationType) && <span className="text-success"> OPEN </span>}
+                                                            {!(item.operationType) ? <span className="text-danger">CLOSE</span> : <span className="text-success"> OPEN </span>}
                                                         </td>
                                                         <td className="col-md-6 text-dark d-flex align-items-center">
                                                             <span className="material-icons f-20 mr-2">

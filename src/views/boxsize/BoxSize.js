@@ -7,6 +7,7 @@ import Aux from "../../hoc/_Aux";
 import BoxSizeForm from './BoxSizeForm';
 import ConfirmDialog from '../commonComponent/Confirm';
 import { NotificationManager } from 'react-notifications';
+import { waiting } from '../../utils/waiting';
 
 
 export default function BoxSize({ match }) {
@@ -22,6 +23,8 @@ export default function BoxSize({ match }) {
 
 
     useEffect(() => {
+        waiting.setWait(true);
+
         loadAdminBoxSize();
     }, []);
 
@@ -31,6 +34,8 @@ export default function BoxSize({ match }) {
                 if (response.data.statusCode == 200) {
                     console.log('load size ', response.data.data);
                     setSize(response.data.data);
+                    // rendered
+                    waiting.setWait(false);
                 } else {
                     NotificationManager.error('Sorry, Cannot get Box size list', 'Loading data ...');
                 }

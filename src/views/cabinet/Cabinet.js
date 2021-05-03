@@ -9,6 +9,7 @@ import BoxList from '../box/Box';
 import { Redirect } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 import Pagination from "react-js-pagination";
+import { waiting } from '../../utils/waiting';
 
 export default function Dashboard() {
 
@@ -28,6 +29,8 @@ export default function Dashboard() {
     const [currentCabinet, setCurrentCabinet] = React.useState(null);
 
     useEffect(() => {
+        waiting.setWait(true);
+
         loadAdminCabinets();
     }, []);
 
@@ -37,13 +40,19 @@ export default function Dashboard() {
                 if (response.data.statusCode == 200) {
                     setCabinets(response.data.data);
                     setTotalItemsCount(response.data.data.length);
+                    // rendered
+                    waiting.setWait(false);
                 } else if (response.data.statusCode == 201) {
                     setCabinets(response.data.data);
 
                 } else {
                     NotificationManager.error('Sorry, Cannot get cabinet list!', "Get Cabinets");
                 }
-            }).catch(e => NotificationManager.error('Sorry, Cannot get cabinet list!', "Get Cabinets"));
+            }).catch(e => {
+                NotificationManager.error('Sorry, Cannot get cabinet list!', "Get Cabinets")
+                waiting.setWait(false);
+
+            });
 
     }
 
@@ -116,9 +125,9 @@ export default function Dashboard() {
                         <Button className="mx-2" size="small" onClick={() => setOpenForm()}>
                             Create Cabinet
                         </Button>
-                        <Button className="mx-2" size="small" variant="dark" onClick={() => setOpenTemplateForm()}>
+                        {/* <Button className="mx-2" size="small" variant="dark" onClick={() => setOpenTemplateForm()}>
                             Create Template
-                        </Button>
+                        </Button> */}
                     </div>
 
                 </Col>

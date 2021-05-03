@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const ngrokID = 'c4a827e90fcc'
 const route_api = 'https://' + ngrokID + '.ngrok.io'
-const newRoute = "https://40.123.255.174"
+const newRoute = "https://may-ao.southafricanorth.cloudapp.azure.com"
 const instance = axios.create({
 	baseURL: `${newRoute}/api`,
 	timeout: 5000,
@@ -47,6 +47,7 @@ const adminApi = {
 	createCabinetTemplate: (params) => instance.post('/v1/cabinet-templates', params),
 	getCabitnetTemplate: () => instance.get('/v1/cabinet-templates'),
 	getTemplateByCabinetId: (id) => instance.get('/v1/cabinets/' + id + '/template-info'),
+	deleteCabinetTemplate: (id) => instance.delete('/v1/cabinet-templates/' + id),
 
 
 	// API for Box 

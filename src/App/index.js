@@ -72,7 +72,7 @@ class App extends Component {
                                     {menu}
                                     <Route path="/" component={AdminLayout} />
                                 </Switch>
-                            </Suspense>ß
+                            </Suspense>
                         </ScrollToTop>
                     </Aux>
                 </LoadingOverlay>

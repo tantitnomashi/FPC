@@ -11,6 +11,7 @@ import UserForm from './UserForm';
 import ConfirmDialog from '../commonComponent/Confirm';
 import { NotificationManager } from 'react-notifications';
 import Pagination from "react-js-pagination";
+import { waiting } from '../../utils/waiting';
 
 // var test = require('../../sampleData.json');
 
@@ -34,6 +35,8 @@ export default function Dashboard() {
 
 
     useEffect(() => {
+        waiting.setWait(true);
+
         loadData();
     }, []);
 
@@ -47,7 +50,8 @@ export default function Dashboard() {
                     })
                     setUser(tmp);
                     setTotalItemsCount(response.data.data.length);
-
+                    // rendered
+                    waiting.setWait(false);
                 } else {
                     NotificationManager.error('Sorry, Cannot get users list !', 'Get Users list');
                 }

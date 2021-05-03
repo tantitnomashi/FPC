@@ -44,7 +44,6 @@ export default function BoxHistory(props) {
                         // force setting current Example immediately
                         setHistory(response.data.data);
                         setTotalItemsCount(response.data.data.length);
-                        NotificationManager.info('Load History', 'Load data');
 
                     } else {
                         NotificationManager.error('Cannot get history! Please check the network again!', 'Load data');

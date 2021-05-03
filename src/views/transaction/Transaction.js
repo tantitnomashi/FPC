@@ -16,6 +16,7 @@ import TransactionDetail from './TransactionDetail';
 import API from '../../utils/adminApi';
 import { NotificationManager } from 'react-notifications';
 
+import { waiting } from '../../utils/waiting';
 
 
 
@@ -47,6 +48,8 @@ export default function Transaction() {
     };
 
     useEffect(() => {
+        waiting.setWait(true);
+
         loadData();
     }, []);
 
@@ -61,7 +64,8 @@ export default function Transaction() {
                     })
                     setTrans(tmp);
                     setTotalItemsCount(response.data.data.length);
-
+                    // rendered
+                    waiting.setWait(false);
                     // setFilterList(tmp)
                 } else {
                     alert('Cant get Trans !')

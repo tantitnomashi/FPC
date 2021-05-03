@@ -5,7 +5,7 @@ import Aux from "../../hoc/_Aux";
 import TimeSlotForm from './RentTimeSlotForm';
 import ConfirmDialog from '../commonComponent/Confirm';
 import { NotificationManager } from 'react-notifications';
-
+import { waiting } from '../../utils/waiting';
 
 export default function RentTimeSlot({ match }) {
 
@@ -18,6 +18,8 @@ export default function RentTimeSlot({ match }) {
 
 
     useEffect(() => {
+        waiting.setWait(true);
+
         loadAdminTimeSlots();
     }, []);
 
@@ -27,6 +29,8 @@ export default function RentTimeSlot({ match }) {
                 if (response.data.statusCode == 200) {
                     console.log('load slots ', response.data.data[0]);
                     setSlots(response.data.data);
+                    // rendered
+                    waiting.setWait(false);
                 } else {
                     NotificationManager.error('Sorry, Cannot get slot list', 'Loading data ...');
                 }

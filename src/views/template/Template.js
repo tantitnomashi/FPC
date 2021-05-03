@@ -5,6 +5,7 @@ import Aux from "../../hoc/_Aux";
 import ConfirmDialog from '../commonComponent/Confirm';
 import TemplateForm from './TemplateForm';
 import { NotificationManager } from 'react-notifications';
+import { waiting } from '../../utils/waiting';
 
 export default function Template() {
 
@@ -17,6 +18,8 @@ export default function Template() {
     const [currentTemplate, setCurrentTemplate] = React.useState(null);
 
     useEffect(() => {
+        waiting.setWait(true);
+
         loadAdminCabinets();
     }, []);
 
@@ -26,6 +29,8 @@ export default function Template() {
                 if (response.data.statusCode == 200) {
                     console.log('load templates ', response.data.data[0]);
                     setTemplates(response.data.data);
+                    // rendered
+                    waiting.setWait(false);
                 } else if (response.data.statusCode == 201) {
                     setTemplates(response.data.data);
 
@@ -68,16 +73,16 @@ export default function Template() {
         }
     }
     const requestDelete = (templateId) => {
-        API.deleteCabinet(currentTemplate.id)
+        API.deleteCabinetTemplate(currentTemplate.id)
             .then((response) => {
                 if (response.data.statusCode == 200) {
-                    NotificationManager.success('Delete template successfully!', 'Delete Cabinet');
+                    NotificationManager.success('Delete template successfully!', 'Delete Template');
                     setTemplates(response.data.data);
                     loadAdminCabinets();
                 } else {
-                    NotificationManager.error('Sorry, Cannot delete this template!', 'Delete Cabinet');
+                    NotificationManager.error('Sorry, Cannot delete this template!', 'Delete Template');
                 }
-            }).catch(e => NotificationManager.error('Sorry, Cannot delete this template!', 'Delete Cabinet'));
+            }).catch(e => NotificationManager.error('Sorry, Cannot delete this template!', 'Delete Template'));
         setCloseForm();
     }
 
@@ -98,9 +103,9 @@ export default function Template() {
                 </Col>
 
             </Row>
-            <TemplateForm open={openTemplate} handleClickClose={setCloseForm} />
+            <TemplateForm reload={loadAdminCabinets} open={openTemplate} handleClickClose={setCloseForm} />
             <ConfirmDialog open={openConfirm} onAccessLabel={"Delete"}
-                tilte="Delete Confirm" message={"Are you sure to delete " + currentTemplate?.name} onAccess={() => requestDelete(currentTemplate?.name)} onCancel={setCloseForm} />
+                tilte="Delete Confirm" message={"Are you sure to delete " + currentTemplate?.id} onAccess={() => requestDelete(currentTemplate?.name)} onCancel={setCloseForm} />
 
             <Row>
 
@@ -117,7 +122,8 @@ export default function Template() {
                                             <Row key={template.id} className="unread py-3 px-1 my-2 border-bottom border-light">
 
                                                 <Col md={2} className='d-flex align-items-center text-center text-dark' >
-                                                    <span className="f-18">{"Template " + (++index)}</span>
+                                                    {/* <span className="f-18">{"Template " + (++index)}</span> */}
+                                                    <span className="f-18">{template?.name}</span>
                                                 </Col>
                                                 <Col md={3} className='text-left d-flex align-items-center'>
                                                     <span className="material-icons f-20 m-r-5">
@@ -150,7 +156,7 @@ export default function Template() {
                     </Card>
                 </Col>
 
-                <Col md={6} xl={6}>
+                {/* <Col md={6} xl={6}>
                     <Card className='card-social'>
                         <Card.Body className='border-bottom'>
                             <div className="row align-items-center justify-content-center">
@@ -212,7 +218,7 @@ export default function Template() {
                         </Card.Body>
                     </Card>
                 </Col>
-
+ */}
 
             </Row>
 

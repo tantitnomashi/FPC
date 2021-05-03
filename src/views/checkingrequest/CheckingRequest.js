@@ -15,6 +15,7 @@ import ConfirmDialog from '../commonComponent/Confirm';
 import RequestForm from './RequestForm';
 import API from '../../utils/adminApi';
 import { NotificationManager } from 'react-notifications';
+import { waiting } from '../../utils/waiting';
 
 
 export default function Request() {
@@ -60,6 +61,8 @@ export default function Request() {
     };
 
     useEffect(() => {
+        waiting.setWait(true);
+
         loadData();
     }, []);
 
@@ -75,6 +78,8 @@ export default function Request() {
                     setRequestList(tmp);
                     setTotalItemsCount(response.data.data.length);
                     // setFilterList(tmp)
+                    // rendered
+                    waiting.setWait(false);
                 } else {
                     alert('Cant get Checking request !')
                 }

@@ -437,7 +437,7 @@ export default function CabinetForm(props) {
 
                                                         {index + 1}
                                                         {selectedTemplate.id == value.id && <div style={{ position: 'absolute', top: '0', right: '0', color: 'greenyellow' }}>
-                                                            <span class="material-icons">check_circle</span>
+                                                            <span className="material-icons">check_circle</span>
                                                         </div>}
                                                     </div>
                                                 )}

@@ -44,8 +44,7 @@ const AppMain = () => {
 
             <Provider store={store}>
                 <BrowserRouter>
-                    {/*basename={config.basename}*/}
-                    {/* basename="/datta-able" */}
+
                     <App />
                 </BrowserRouter>
             </Provider>

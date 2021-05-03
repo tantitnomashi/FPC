@@ -37,3 +37,7 @@ messaging.setBackgroundMessageHandler(function (payload) {
 self.addEventListener("notificationclick", function (event) {
     console.log(event);
 });
+
+
+
+

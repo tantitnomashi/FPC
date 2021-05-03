@@ -186,7 +186,6 @@ export default function Box({ match }) {
             return <div key={e.id}>
                 {boxNums?.map((item) => {
                     let bgColor = item.rentingStatus === 1 ? "bg-warning" : item.rentingStatus === 2 ? "bg-danger" : "bg-primary"
-
                     if (e.id == item.positionId) {
                         return <BoxDetail id={item.id} handleDetail={handleDetail} p={MAX_PADDING} w={w * SIZE} h={h * SIZE} bgColor={bgColor} item={item} boxes={boxNums} ></BoxDetail>
                     } else {
@@ -217,21 +216,24 @@ export default function Box({ match }) {
                             <Row className="text-dark py-3 px-1 my-2 border-bottom border-light">
 
                                 <Col md={3} className='text-left mt-3' >
-                                    <Card.Title>{"ID: " + currentCabinet?.id + " - " + currentCabinet?.name}</Card.Title>
-                                    <Card.Text>
-                                        {currentCabinet?.location.buildingName}
-                                    </Card.Text>
-                                    <Card.Title>Address</Card.Title>
-                                    <Card.Text>
-                                        <span className="material-icons f-20 m-r-5">
-                                            room</span>
-                                        {currentCabinet?.location.fullAddress}
-                                    </Card.Text>
-                                    <Card.Title>{boxes?.length + " boxes in cabinet"}</Card.Title>
-                                    <Card.Text>
-                                        Some quick example text to build on the card title and make up the bulk of
-                                        the card's content  .
-                                      </Card.Text>
+                                    {
+                                        (currentCabinet != undefined) &&
+                                        <Row>
+                                            <Card.Title>{"ID: " + currentCabinet?.id + " - " + currentCabinet?.name}</Card.Title>
+                                            <Card.Text>
+                                                {currentCabinet?.location.buildingName}
+                                            </Card.Text>
+                                            <Card.Title>Address</Card.Title>
+                                            <Card.Text>
+                                                <span className="material-icons f-20 m-r-5">
+                                                    room</span>
+                                                {currentCabinet?.location.fullAddress}
+                                            </Card.Text>
+                                            <Card.Title>{boxes?.length + " boxes in cabinet"}</Card.Title>
+                                        </Row>
+                                    }
+
+
 
                                 </Col>
 

@@ -13,12 +13,18 @@ var firebaseConfig = {
 const vapidKey = "BFWlbGm_VwrXhzYo3cFjNVRhySHd8Xj4_Kh71F26elUrlUv3ltySv97h3v8V3ofai0USrrYABGPYsvcpRY3m780"
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
-const messaging = firebase.messaging(); messaging.getToken({ vapidKey: vapidKey }).then((currentToken) => {
+const messaging = firebase.messaging();
+
+var registrationTokens = [];
+messaging.getToken({ vapidKey: vapidKey }).then((currentToken) => {
     if (currentToken) {
         console.log('current token for client: ', currentToken);
+        registrationTokens[0] = currentToken;
         // setTokenFound(true);
         // Track the token -> client mapping, by sending to backend server
         // show on the UI that permission is secured
+
+
     } else {
         console.log('No registration token available. Request permission to generate one.');
         // setTokenFound(false);
@@ -28,6 +34,8 @@ const messaging = firebase.messaging(); messaging.getToken({ vapidKey: vapidKey 
     console.log('An error occurred while retrieving token. ', err);
     // catch error while creating client token
 });
+
+
 // export const getToken = (setTokenFound) => {
 //     return 
 // }

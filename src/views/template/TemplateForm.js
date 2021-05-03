@@ -17,9 +17,12 @@ const COLOR_CATE = ['aqua', 'black', 'blue', 'fuchsia', 'gray', 'green',
 let indexLayout = -1;
 let selectedSize = {};
 let isAddCompleted = true;
+let maxCol = 0;
+let maxRow = 0;
 export default function TemplateForm(props) {
     const { open, handleClickClose, currentProfile, reload } = props;
     const [size, setSize] = React.useState([]);
+
 
 
     // for grid
@@ -115,7 +118,7 @@ export default function TemplateForm(props) {
                 {dataView.map((val, index, arr) => {
                     if (val.index == i) {
                         hadBox = true;
-                        return (<div style={{
+                        return (<div key={index} style={{
                             backgroundColor: val.color,
                             flex: 1
                         }}> {val.name}
@@ -127,6 +130,21 @@ export default function TemplateForm(props) {
             </div>);
             arr.push(e);
         }
+        console.log("#DATA VIEW", dataView);
+        console.log("#DATA VIEW ARR", dataArrView);
+
+
+        for (var i = 0; i < dataArrView?.length; i++) {
+            //+1 cause index from 0, -1 cause  the root size
+            if (maxCol < (dataArrView[i].index % MAX_COL_NUM + 1 + dataArrView[i].virtualWidth - 1)) {
+                maxCol = (dataArrView[i].index % MAX_COL_NUM + 1 + dataArrView[i].virtualWidth - 1)
+            }
+            if (maxRow < (Math.floor(dataArrView[i].index / MAX_ROW_NUM + 1) + dataArrView[i].virtualHeight - 1)) {
+                maxRow = (Math.floor(dataArrView[i].index / MAX_ROW_NUM + 1) + dataArrView[i].virtualHeight - 1)
+            }
+
+        }
+        console.log("MAX COL - " + maxCol + " MAX ROW - " + maxRow);
 
         setArrView(arr);
     }
@@ -159,14 +177,14 @@ export default function TemplateForm(props) {
         console.log("##### BOX CONFIG", boxConfig);
 
         let preTemplate = {
-            boxCnt: dataArrView.length,
-            rowsCnt: 0,
-            colsCnt: 0,
-            name: document.getElementById('name').value,
+            boxCnt: dataArrView?.length,
+            rowsCnt: maxRow,
+            colsCnt: maxCol,
             imgUrl: "string",
             boxConfigurations: boxConfig
 
         }
+        console.log("##### PRE", preTemplate);
 
         API.createCabinetTemplate(preTemplate).then((response) => {
             if (response.data.statusCode == 200) {
@@ -184,35 +202,35 @@ export default function TemplateForm(props) {
 
     return (
 
-        <Dialog maxWidth={'lg'} fullWidth={true} className="dialog-userForm" open={open} onClose={handleClickClose} aria-labelledby="form-dialog-title">
+        <Dialog maxWidth={'sm'} fullWidth={true} className="dialog-userForm" open={open} onClose={handleClickClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Create New Template</DialogTitle>
             <div>
 
             </div>
             <DialogContent>
-                <DialogContentText   >
-                    To {currentProfile ? "update" : "create"} Cabinet, please fill all fields below.
-                            </DialogContentText>
+
 
                 <Form>
                     <Row>
 
-                        <Col md={8} xl={4}>
+                        {/* <Col md={8} xl={4}>
                             <Form.Label column lg={12}>Name </Form.Label>
                             <Form.Control className="my-1" id="name" name="cabinet-name"
                                 label="Name"
                                 type="Text" placeholder="" />
 
 
-                        </Col>
+                        </Col> */}
 
 
                         {/* the right part of create form */}
-                        <Col md={4} xl={8}>
-                            <Row>
-                                <Col md={4}>   <Button variant="warning" className="text-dark" onClick={() => {
+                        <Col md={4} xl={12}>
+                            <Row >
+                                <Col md={6}>   <Button variant="warning" className="text-dark" onClick={() => {
                                     isAddCompleted = true;
                                     console.log(dataArrView[dataArrView.length - 1]);
+                                    NotificationManager.info('Added !', '');
+
 
                                 }}>
                                     New Box
@@ -222,7 +240,7 @@ export default function TemplateForm(props) {
                                         Undo
                                  </Button>
                                 </Col>
-                                <Col md={3}>
+                                <Col md={6}>
                                     <div className="btn-group d-flex align-items-center justify-content-center" role="group">
 
                                         <select id={"size"} class="form-select" onChange={(val) => {

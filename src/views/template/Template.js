@@ -7,9 +7,14 @@ import TemplateForm from './TemplateForm';
 import { NotificationManager } from 'react-notifications';
 import { waiting } from '../../utils/waiting';
 
+const MAX_PADDING = 2;
+const SIZE = 4;
 export default function Template() {
 
     const [templates, setTemplates] = React.useState([]);
+    const [selectedTemplate, setSelectedTemplate] = useState({});
+    // for preview template
+    const [dataTemplateArr, setDataTempleteArr] = useState([]);
 
     const [open, setOpen] = React.useState(false);
     const [openConfirm, setOpenConfirm] = React.useState(false);
@@ -27,8 +32,11 @@ export default function Template() {
         API.getCabitnetTemplate()
             .then((response) => {
                 if (response.data.statusCode == 200) {
-                    console.log('load templates ', response.data.data[0]);
+                    console.log('load templates ', response.data.data);
                     setTemplates(response.data.data);
+                    setSelectedTemplate(response.data.data[0]);
+                    let dataView = generateView(response.data.data[0]);
+                    setDataTempleteArr(dataView);
                     // rendered
                     waiting.setWait(false);
                 } else if (response.data.statusCode == 201) {
@@ -86,9 +94,75 @@ export default function Template() {
         setCloseForm();
     }
 
+
+    const generateView = (exampleTemplate) => {
+        let view = [];
+        let data4View = [];
+        console.log("##Generate view ....");
+        console.log("##Generate current example", exampleTemplate);
+        for (let i = 0; i < exampleTemplate.colsCnt; i++) {
+            view.push([]);
+            data4View.push([]);
+        }
+
+        exampleTemplate.boxConfigurations.map((c) => {
+            let index = c.topLeftPosition.indexOf(",");
+            let top = parseInt(c.topLeftPosition.substr(0, index), 10);
+            let left = parseInt(c.topLeftPosition.substr(index + 1, c.topLeftPosition.length), 10);
+
+            let boxView = data4View[left - 1];
+            let numBox = (c.boxSizeType.actualHeight) / 30;
+            boxView.push({
+                id: c.id,
+                name: c.boxNum,
+                sizeName: c.boxSizeType.sizeName,
+                top: top,
+                numBox: numBox,
+                w: c.boxSizeType.actualWidth,
+                h: c.boxSizeType.actualHeight// + ((numBox - 1) * MAX_PADDING / 2)
+            });
+
+        });
+
+        data4View.map((e, i) => {
+            let currentIndex = 1;
+            e.map((e1, iArr) => {
+                let boxView = view[i];
+                let indexTmp = e1.numBox;
+                if (e1.top != currentIndex) {
+                    for (let iL = 0; iL < e1.top - currentIndex; iL++) {
+
+                        boxView.push(BoxItem('', iArr, 30, 30));
+                    }
+                    currentIndex = e1.top;
+                }
+                currentIndex += indexTmp;
+
+                boxView.push(BoxItem('Box' + e1.name, e1, e1.w, e1.h));
+            })
+        });
+        return view;
+    }
+    const handlePreview = (previewTemplate) => {
+        setSelectedTemplate(previewTemplate)
+        console.log("### Box Configs:", previewTemplate);
+        let dataView = generateView(previewTemplate);
+        setDataTempleteArr(dataView);
+        // setPreTemplate(preTemplate);
+    }
+    const BoxItem = (data, e, w, h) => {
+
+        return <div key={1} id={e.id} style={{ padding: `${MAX_PADDING}px`, width: `${w * SIZE}px`, height: `${h * SIZE}px` }}>
+            <div className={"w-100 h-100 d-flex align-items-center" + (data.length > 3 ? " bg-warning" : " bg-secondary")} >
+                <h3 className="text-center mx-auto">  {data}</h3>
+            </div>
+        </div >
+        // }
+    }
+
+
+
     return (
-
-
 
         <Aux>
             <Row>
@@ -116,14 +190,13 @@ export default function Template() {
                         </Card.Header>
                         <Card.Body className='px-3 py-2'>
                             <Row>
-                                <Col md={12}>
+                                <Col md={7}>
                                     {
                                         templates?.map((template, index) =>
                                             <Row key={template.id} className="unread py-3 px-1 my-2 border-bottom border-light">
 
                                                 <Col md={2} className='d-flex align-items-center text-center text-dark' >
-                                                    {/* <span className="f-18">{"Template " + (++index)}</span> */}
-                                                    <span className="f-18">{template?.name}</span>
+                                                    <span className="f-18">{"Template " + (++index)}</span>
                                                 </Col>
                                                 <Col md={3} className='text-left d-flex align-items-center'>
                                                     <span className="material-icons f-20 m-r-5">
@@ -146,6 +219,29 @@ export default function Template() {
                                 </Col>
                                 <Col md={5}>
 
+                                    <div className="d-flex flex-row" style={{ height: '600px' }}>
+                                        {
+                                            dataTemplateArr.map((e, i) => (
+                                                <div key={i}>
+                                                    {e.map((b) => b)}
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+
+                                    <div className="mt-2">
+                                        {templates.map((value, index) =>
+                                            <div key={index} className="btn btn-dark" style={{
+                                                position: 'relative', display: 'inline-block', width: '60px', height: '40px', marginRight: '3px'
+                                            }} onClick={() => handlePreview(value)}>
+
+                                                {index + 1}
+                                                {selectedTemplate.id == value.id && <div style={{ position: 'absolute', top: '0', right: '0', color: 'greenyellow' }}>
+                                                    <span className="material-icons">check_circle</span>
+                                                </div>}
+                                            </div>
+                                        )}
+                                    </div>
                                 </Col>
                             </Row>
 

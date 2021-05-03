@@ -18,6 +18,13 @@ export default function BoxSizeForm(props) {
 
 
     const submitForm = () => {
+
+
+        let ratio = (parseInt(actualWidth) / parseInt(actuallHeight)) - (parseInt(virtualWidth) / parseInt(virtualHeight))
+        if (Math.abs(ratio) > 0.2) {
+            NotificationManager.warning('Its seem like the virtual size is not match with the actual size!', 'Create Box Size')
+            return;
+        }
         let tmp = {
             sizeName: newName,
             virtualWidth: parseInt(virtualWidth),

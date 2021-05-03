@@ -4,7 +4,6 @@ import API from '../../utils/adminApi';
 import Aux from "../../hoc/_Aux";
 import CabinetForm from './CabinetForm';
 import ConfirmDialog from '../commonComponent/Confirm';
-import TemplateForm from './TemplateForm';
 import BoxList from '../box/Box';
 import { Redirect } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
@@ -27,6 +26,12 @@ export default function Dashboard() {
     const [openTemplate, setOpenTemplate] = React.useState(false);
 
     const [currentCabinet, setCurrentCabinet] = React.useState(null);
+    const [searchResults, setSearchResults] = React.useState([]);
+
+    const [searchTerm, setSearchTerm] = React.useState("");
+    const handleChange = event => {
+        setSearchTerm(event.target.value);
+    };
 
     useEffect(() => {
         waiting.setWait(true);
@@ -34,12 +39,21 @@ export default function Dashboard() {
         loadAdminCabinets();
     }, []);
 
+    useEffect(() => {
+
+        const results = cabinets.filter(cabinet =>
+            cabinet.name.toLowerCase().includes(searchTerm)
+        );
+        setSearchResults(results);
+    }, [searchTerm]);
+
     const loadAdminCabinets = () => {
         API.getCabitnet()
             .then((response) => {
                 if (response.data.statusCode == 200) {
                     setCabinets(response.data.data);
                     setTotalItemsCount(response.data.data.length);
+                    setSearchResults(response.data.data);
                     // rendered
                     waiting.setWait(false);
                 } else if (response.data.statusCode == 201) {
@@ -115,26 +129,24 @@ export default function Dashboard() {
             <Row>
 
                 <Col className="text-left justify-content-start" md={6} xl={6}>
-                    {/* <Form inline className=" justify-content-start d-flex align-items-center ">
-                        <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                    <Form inline className=" justify-content-start d-flex align-items-center ">
+                        <FormControl type="text" placeholder="Search" className="mr-sm-2" value={searchTerm}
+                            onChange={handleChange} />
                         <Button variant="outline-secondary" className="mt-1">Search</Button>
-                    </Form> */}
+                    </Form>
                 </Col>
                 <Col className="text-right justify-content-end" md={6} xl={6}>
                     <div className="text-right mb-3">
                         <Button className="mx-2" size="small" onClick={() => setOpenForm()}>
                             Create Cabinet
                         </Button>
-                        {/* <Button className="mx-2" size="small" variant="dark" onClick={() => setOpenTemplateForm()}>
-                            Create Template
-                        </Button> */}
+
                     </div>
 
                 </Col>
 
             </Row>
             <CabinetForm reload={loadAdminCabinets} open={open} handleClickClose={setCloseForm} currentCabinet={currentCabinet} />
-            <TemplateForm open={openTemplate} handleClickClose={setCloseForm} />
             <ConfirmDialog open={openConfirm} onAccessLabel={"Delete"}
                 tilte="Delete Confirm" message={"Are you sure to delete " + currentCabinet?.name} onAccess={() => requestDelete(currentCabinet?.name)} onCancel={setCloseForm} />
 
@@ -148,7 +160,7 @@ export default function Dashboard() {
                         <Card.Body className='px-3 py-2'>
 
                             {
-                                cabinets?.slice((currentProcessPage - 1) * 4, currentProcessPage * 4).map(cabinet =>
+                                searchResults?.slice((currentProcessPage - 1) * 4, currentProcessPage * 4).map(cabinet =>
                                     <Row key={cabinet.id} className="unread py-3 px-1 my-2 border-bottom border-light">
                                         <Col md={1} className='text-center' >
 

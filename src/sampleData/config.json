@@ -1,0 +1,8 @@
+{
+    "SERVER_API": "https://may-ao.southafricanorth.cloudapp.azure.com",
+    "NGROK_API": "https://may-ao.southafricanorth.cloudapp.azure.com",
+    "MAX_COL": "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+    "MAX_ROW": "1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr",
+    "MAX_COL_NUM": 10,
+    "MAX_ROW_NUM": 10
+}

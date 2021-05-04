@@ -6,6 +6,7 @@ import ConfirmDialog from '../commonComponent/Confirm';
 import TemplateForm from './TemplateForm';
 import { NotificationManager } from 'react-notifications';
 import { waiting } from '../../utils/waiting';
+import moment from 'moment';
 
 const MAX_PADDING = 2;
 const SIZE = 4;
@@ -190,7 +191,7 @@ export default function Template() {
                         </Card.Header>
                         <Card.Body className='px-3 py-2'>
                             <Row>
-                                <Col md={7}>
+                                <Col md={8}>
                                     {
                                         templates?.map((template, index) =>
                                             <Row key={template.id} className="unread py-3 px-1 my-2 border-bottom border-light">
@@ -198,7 +199,7 @@ export default function Template() {
                                                 <Col md={2} className='d-flex align-items-center text-center text-dark' >
                                                     <span className="f-18">{"Template " + (++index)}</span>
                                                 </Col>
-                                                <Col md={3} className='text-left d-flex align-items-center'>
+                                                <Col md={4} className='text-left d-flex align-items-center'>
                                                     <span className="material-icons f-20 m-r-5">
                                                         dashboard</span>
                                                     <span className="text-dark f-18"> {template.rowsCnt + " rows x " + template.colsCnt + " cols"}</span>
@@ -206,18 +207,19 @@ export default function Template() {
                                                 </Col>
                                                 <Col md={4} className="d-flex f-18 align-items-center text-dark">
 
-                                                    {new Date(template.updatedAt).toGMTString()}
+                                                    {moment(template.updatedAt).add(7, "h").calendar()}
+
 
                                                 </Col>
 
-                                                <Col md={3} className='d-flex justify-content-end  '>
+                                                <Col md={2} className='d-flex justify-content-end  '>
                                                     <Button size="small" className="label theme-bg2 text-white f-12" onClick={() => handleDelete(template)}>Delete</Button>
                                                 </Col>
                                             </Row>
                                         )
                                     }
                                 </Col>
-                                <Col md={5}>
+                                <Col md={4}>
 
                                     <div className="d-flex flex-row" style={{ height: '600px' }}>
                                         {

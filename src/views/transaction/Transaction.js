@@ -3,6 +3,7 @@ import {
     Row, Col, Card, Table, Tabs, Button, Form, FormControl,
     Collapse, InputGroup
 } from 'react-bootstrap';
+import moment from 'moment';
 
 import Aux from "../../hoc/_Aux";
 import DEMO from "../../store/constant";
@@ -17,8 +18,6 @@ import API from '../../utils/adminApi';
 import { NotificationManager } from 'react-notifications';
 
 import { waiting } from '../../utils/waiting';
-
-
 
 
 
@@ -208,67 +207,13 @@ export default function Transaction() {
                         <Button size="sm" variant="outline-secondary">Search</Button>
                     </Form> */}
 
+
+
                 </Col>
             </Row>
 
             <Row>
-                {/* <Col md={6} xl={4}>
-                    <Card>
-                        <Card.Body>
-                            <h6 className='mb-4'>Daily Sales</h6>
-                            <div className="row d-flex align-items-center">
-                                <div className="col-9">
-                                    <h3 className="f-w-300 d-flex align-items-center m-b-0"><i className="feather icon-arrow-up text-c-green f-30 m-r-5" /> $248.95</h3>
-                                </div>
 
-                                <div className="col-3 text-right">
-                                    <p className="m-b-0">50%</p>
-                                </div>
-                            </div>
-                            <div className="progress m-t-30" style={{ height: '7px' }}>
-                                <div className="progress-bar progress-c-theme" role="progressbar" style={{ width: '50%' }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" />
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col md={6} xl={4}>
-                    <Card>
-                        <Card.Body>
-                            <h6 className='mb-4'>Monthly Sales</h6>
-                            <div className="row d-flex align-items-center">
-                                <div className="col-9">
-                                    <h3 className="f-w-300 d-flex align-items-center m-b-0"><i className="feather icon-arrow-down text-c-red f-30 m-r-5" /> $2.942.32</h3>
-                                </div>
-
-                                <div className="col-3 text-right">
-                                    <p className="m-b-0">36%</p>
-                                </div>
-                            </div>
-                            <div className="progress m-t-30" style={{ height: '7px' }}>
-                                <div className="progress-bar progress-c-theme2" role="progressbar" style={{ width: '35%' }} aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" />
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col xl={4}>
-                    <Card>
-                        <Card.Body>
-                            <h6 className='mb-4'>Yearly Sales</h6>
-                            <div className="row d-flex align-items-center">
-                                <div className="col-9">
-                                    <h3 className="f-w-300 d-flex align-items-center m-b-0"><i className="feather icon-arrow-up text-c-green f-30 m-r-5" /> $8.638.32</h3>
-                                </div>
-
-                                <div className="col-3 text-right">
-                                    <p className="m-b-0">70%</p>
-                                </div>
-                            </div>
-                            <div className="progress m-t-30" style={{ height: '7px' }}>
-                                <div className="progress-bar progress-c-theme" role="progressbar" style={{ width: '70%' }} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" />
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col> */}
                 <Col md={6} xl={12}>
                     <Card className='Recent-Users'>
                         <Card.Header>
@@ -311,8 +256,8 @@ export default function Transaction() {
                                                         "fa fa-circle text-c-green f-10 m-r-15" :
                                                         "fa fa-circle text-c-red f-10 m-r-15"} />
 
-                                                    {new Date(transaction.rentStartTime).toGMTString()}
-
+                                                    {/* {new Date(transaction.rentStartTime).toGMTString()} */}
+                                                    {moment(transaction.rentStartTime).add(7, "h").calendar()}
 
 
                                                 </td>

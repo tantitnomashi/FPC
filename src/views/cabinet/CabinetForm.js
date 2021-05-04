@@ -333,7 +333,7 @@ export default function CabinetForm(props) {
                                 </Collapse>
 
 
-                                <Form.Label column lg={12}>Base Price</Form.Label>
+                                <Form.Label column lg={12}>Price Weight</Form.Label>
                                 <Form.Control className="my-1" id="base-price"
                                     type="number" min="1" step="0.01" defaultValue={currentCabinet?.priceWeight}
                                     onChange={(e) => {

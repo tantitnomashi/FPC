@@ -3,6 +3,7 @@ import {
     Row, Col, Card, Table, Tabs, Button, Form, FormControl,
     Collapse, InputGroup
 } from 'react-bootstrap';
+import moment from 'moment';
 
 import Aux from "../../hoc/_Aux";
 import DEMO from "../../store/constant";
@@ -244,7 +245,7 @@ export default function Request() {
                                                         query_builder
                                                     </span>
 
-                                                    {new Date(request.createdAt).toGMTString()}
+                                                    {moment(request.createdAt).add(7, "h").calendar()}
 
 
                                                 </td>

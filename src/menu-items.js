@@ -104,65 +104,65 @@ export default {
                     display: true,
 
                 }
-                ,
-                {
-                    id: 'basic',
-                    title: 'Others',
-                    type: 'collapse',
-                    icon: 'feather icon-box',
-                    display: true,
+                // ,
+                // {
+                //     id: 'basic',
+                //     title: 'Others',
+                //     type: 'collapse',
+                //     icon: 'feather icon-box',
+                //     display: true,
 
-                    children: [
-                        {
-                            id: 'button',
-                            title: 'Button',
-                            type: 'item',
-                            url: '/basic/button',
-                            display: true,
+                //     children: [
+                //         {
+                //             id: 'button',
+                //             title: 'Button',
+                //             type: 'item',
+                //             url: '/basic/button',
+                //             display: true,
 
-                        },
-                        {
-                            id: 'badges',
-                            title: 'Badges',
-                            type: 'item',
-                            display: true,
+                //         },
+                //         {
+                //             id: 'badges',
+                //             title: 'Badges',
+                //             type: 'item',
+                //             display: true,
 
-                            url: '/basic/badges'
-                        },
-                        {
-                            id: 'breadcrumb-pagination',
-                            title: 'Breadcrumb & Pagination',
-                            type: 'item',
-                            display: true,
+                //             url: '/basic/badges'
+                //         },
+                //         {
+                //             id: 'breadcrumb-pagination',
+                //             title: 'Breadcrumb & Pagination',
+                //             type: 'item',
+                //             display: true,
 
-                            url: '/basic/breadcrumb-paging'
-                        },
-                        {
-                            id: 'collapse',
-                            title: 'Collapse',
-                            type: 'item',
-                            display: true,
+                //             url: '/basic/breadcrumb-paging'
+                //         },
+                //         {
+                //             id: 'collapse',
+                //             title: 'Collapse',
+                //             type: 'item',
+                //             display: true,
 
-                            url: '/basic/collapse'
-                        },
-                        {
-                            id: 'tabs-pills',
-                            title: 'Tabs & Pills',
-                            type: 'item',
-                            display: true,
+                //             url: '/basic/collapse'
+                //         },
+                //         {
+                //             id: 'tabs-pills',
+                //             title: 'Tabs & Pills',
+                //             type: 'item',
+                //             display: true,
 
-                            url: '/basic/tabs-pills'
-                        },
-                        {
-                            id: 'typography',
-                            title: 'Typography',
-                            type: 'item',
-                            display: true,
+                //             url: '/basic/tabs-pills'
+                //         },
+                //         {
+                //             id: 'typography',
+                //             title: 'Typography',
+                //             type: 'item',
+                //             display: true,
 
-                            url: '/basic/typography'
-                        }
-                    ]
-                }
+                //             url: '/basic/typography'
+                //         }
+                //     ]
+                // }
             ]
         },
         // {

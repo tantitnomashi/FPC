@@ -59,7 +59,7 @@ export default function Login() {
                 setErrName("");
                 localStorage.setItem('admin-token', response.data.data.tokenAccess);
                 localStorage.setItem('username', response.data.data.username);
-                localStorage.setItem('fullname', response.data.data.fullName);
+                localStorage.setItem('c', response.data.data.fullName);
                 window.location.href = '/cabinet';
             } else if (response.data.statusCode == 404) {
                 setErrName("Wrong username or Password ! Try Again !");

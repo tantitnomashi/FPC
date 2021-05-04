@@ -42,16 +42,6 @@ export default function CabinetForm(props) {
 
 
     const [selectedStaff, setSelectedStaff] = useState('');
-    // for new template 
-    // for grid
-    const [arrView, setArrView] = useState([]);
-    const [dataArrView, setDataArrView] = useState([]);
-
-
-    const [maxCol, setMaxCol] = useState('');
-    const [maxRow, setMaxRow] = useState('');
-    const [maxColNum, setMaxColNum] = useState(0);
-    const [maxRowNum, setMaxRowNum] = useState(0);
 
 
     const handleChange = (event) => {
@@ -142,113 +132,53 @@ export default function CabinetForm(props) {
     }
 
 
-    const generateView = (previewTemplate) => {
-        // generate view from a template here
-        let dataView = [];
+    const generateView = (exampleTemplate) => {
+        let view = [];
+        let data4View = [];
+        console.log("##Generate view ....");
+        console.log("##Generate current example", exampleTemplate);
+        for (let i = 0; i < exampleTemplate.colsCnt; i++) {
+            view.push([]);
+            data4View.push([]);
+        }
 
+        exampleTemplate.boxConfigurations.map((c) => {
+            let index = c.topLeftPosition.indexOf(",");
+            let top = parseInt(c.topLeftPosition.substr(0, index), 10);
+            let left = parseInt(c.topLeftPosition.substr(index + 1, c.topLeftPosition.length), 10);
 
-        for (var i = 0; i < previewTemplate.rowsCnt * previewTemplate.colsCnt; i++) {
-            dataView.push({
-                color: "",
-                name: "",
+            let boxView = data4View[left - 1];
+            let numBox = (c.boxSizeType.actualHeight) / 30;
+            boxView.push({
+                id: c.id,
+                name: c.boxNum,
+                sizeName: c.boxSizeType.sizeName,
+                top: top,
+                numBox: numBox,
+                w: c.boxSizeType.actualWidth,
+                h: c.boxSizeType.actualHeight// + ((numBox - 1) * MAX_PADDING / 2)
             });
-        }
 
+        });
 
-        for (var i = 0; i < previewTemplate.boxConfigurations.length; i++) {
+        data4View.map((e, i) => {
+            let currentIndex = 1;
+            e.map((e1, iArr) => {
+                let boxView = view[i];
+                let indexTmp = e1.numBox;
+                if (e1.top != currentIndex) {
+                    for (let iL = 0; iL < e1.top - currentIndex; iL++) {
 
-            //each box 
-            let boxSize = previewTemplate.boxConfigurations[i].boxSizeType;
-            let topLeft = previewTemplate.boxConfigurations[i].topLeftPosition;
-            let left = parseInt(topLeft.split(",")[1]);
-            let top = parseInt(topLeft.split(",")[0]);
-            let position = 0;
-
-            if (left % previewTemplate.colsCnt == 0) {
-                position = (top - 1) * previewTemplate.colsCnt + previewTemplate.colsCnt - 1;
-
-            } else {
-                position = (top - 1) * previewTemplate.colsCnt + (left % previewTemplate.colsCnt) - 1;
-
-            }
-            console.log("dataView Wi", top, left, position, boxSize.sizeName)
-            let isTop = true;
-            let isLeft = true;
-            for (var wi = position; wi < (boxSize.virtualWidth + position); wi++) {
-
-                let currentIndex = wi;
-                for (var hi = wi; hi < boxSize.virtualHeight + wi; hi++) {
-                    // dataView[hi + previewTemplate.colsCnt].color = "red";
-                    // console.log("hi", hi, boxSize.sizeName, previewTemplate.colsCnt, hi + previewTemplate.colsCnt)
-                    dataView[currentIndex].name = " ";
-                    if (isTop) {
-                        dataView[currentIndex].top = "1px solid white";
-
-                        dataView[currentIndex].name = "Box " + previewTemplate.boxConfigurations[i].boxNum;
+                        boxView.push(BoxItem('', iArr, 30, 30));
                     }
-                    if (isLeft) {
-                        dataView[currentIndex].left = "1px solid white";
-                    }
-                    if (wi == boxSize.virtualWidth + position - 1) {
-                        dataView[currentIndex].right = "1px solid white";
-                    }
-
-                    if (hi == boxSize.virtualHeight + wi - 1) {
-                        dataView[currentIndex].bottom = "1px solid white";
-                    }
-                    isTop = false;
-                    currentIndex += previewTemplate.colsCnt;
+                    currentIndex = e1.top;
                 }
-                isLeft = false;
-            }
+                currentIndex += indexTmp;
 
-        }
-        let arrView = [];
-
-        for (let i = 0; i < dataView.length; i++) {
-            let data = dataView[i];
-            let dataDiv = <div key={`${i}`}
-                className={(data.name ? "bg-warning" : "bg-secondary") + (data.name ? " text-dark" : " text-light")}
-                style={{
-                    borderTop: data.top ? data.top : "",
-                    borderLeft: data.left ? data.left : "",
-                    borderRight: data.right ? data.right : "",
-                    borderBottom: data.bottom ? data.bottom : "",
-                    justifyItems: "center",
-                    alignItems: "center",
-                    textAlign: "center",
-                    display: "flex",
-                    fontSize: "1.5em"
-                }}
-
-            ><div style={{
-                flex: 1,
-            }}>{data.name ? data.name : "Hub"}</div></div>
-            arrView.push(dataDiv);
-        }
-        setArrView(arrView);
-
-        // setArrView(gridArr);
-        let maxRowString = "";
-        let size = 110;
-        let rowNum = 0;
-        for (let i = 0; i < previewTemplate.rowsCnt; i++) {
-            maxRowString += "1fr ";
-            rowNum += size;
-        }
-        let maxColString = "";
-        let colNum = 0;
-        for (let i = 0; i < previewTemplate.colsCnt; i++) {
-            maxColString += "1fr ";
-            colNum += size;
-        }
-        setMaxCol(maxColString);
-        setMaxColNum(colNum);
-        setMaxRow(maxRowString);
-        setMaxRowNum(rowNum);
-
-
-
+                boxView.push(BoxItem('Box' + e1.name, e1, e1.w, e1.h));
+            })
+        });
+        return view;
     }
     const handlePreview = (previewTemplate) => {
         setSelectedTemplate(previewTemplate)
@@ -474,21 +404,17 @@ export default function CabinetForm(props) {
                             </Col>
                             {currentCabinet &&
                                 <Col md={6} xl={6}>
-
-                                    <div style={{
-                                        display: "grid",
-                                        height: maxRowNum + "px",
-                                        width: maxColNum + "px",
-                                        gridTemplateColumns: maxCol,
-                                        gridTemplateRows: maxRow
-                                    }}>
-                                        {
-                                            arrView?.map(val => {
-                                                return val;
-                                            })
-                                        }
+                                    <div>
+                                        <div className="d-flex flex-row" style={{ height: '600px' }}>
+                                            {
+                                                dataTemplateArr.map((e, i) => (
+                                                    <div key={i}>
+                                                        {e.map((b) => b)}
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
                                     </div>
-
 
 
 
@@ -496,17 +422,13 @@ export default function CabinetForm(props) {
                             {!currentCabinet &&
                                 <Col md={6} xl={6}>
                                     <div>
-                                        <div style={{
-                                            display: "grid",
-                                            height: maxRowNum + "px",
-                                            width: maxColNum + "px",
-                                            gridTemplateColumns: maxCol,
-                                            gridTemplateRows: maxRow
-                                        }}>
+                                        <div className="d-flex flex-row" style={{ height: '600px' }}>
                                             {
-                                                arrView?.map(val => {
-                                                    return val;
-                                                })
+                                                dataTemplateArr.map((e, i) => (
+                                                    <div key={i}>
+                                                        {e.map((b) => b)}
+                                                    </div>
+                                                ))
                                             }
                                         </div>
 

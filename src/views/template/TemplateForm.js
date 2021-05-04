@@ -189,7 +189,7 @@ export default function TemplateForm(props) {
         API.createCabinetTemplate(preTemplate).then((response) => {
             if (response.data.statusCode == 200) {
                 NotificationManager.success('Create template successfully!', 'Create Template');
-                reload();
+                reload(); resetView();
             } else {
                 NotificationManager.error('Sorry, Cannot create this Template!', 'Create Template')
             }
@@ -198,7 +198,11 @@ export default function TemplateForm(props) {
         handleClickClose();
 
     }
-
+    const resetView = () => {
+        setArrView([]);
+        setDataArrView([]);
+        handleAddBoxToCabinet([]);
+    }
 
     return (
 
@@ -302,7 +306,11 @@ export default function TemplateForm(props) {
 
 
             <DialogActions>
-                <Button onClick={handleClickClose} variant="secondary">
+                <Button onClick={() => {
+                    handleClickClose();
+                    resetView();
+                }}
+                    variant="secondary">
                     Cancel
               </Button>
                 <Button className='px-4' onClick={sumbitFormTemplate} variant="success">

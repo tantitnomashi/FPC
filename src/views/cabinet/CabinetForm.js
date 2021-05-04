@@ -17,6 +17,7 @@ export default function CabinetForm(props) {
     const [openConfirm, setOpenConfirm] = React.useState(false);
     const [locations, setLocations] = useState([]);
     const [users, setUser] = React.useState([]);
+    const [defaultLocation, setDefaultLocation] = React.useState({});
 
     // for preview template
     const [dataTemplateArr, setDataTempleteArr] = useState([]);
@@ -98,6 +99,13 @@ export default function CabinetForm(props) {
             .then((response) => {
                 if (response.data.statusCode == 200) {
                     setLocations(response.data.data);
+
+                    let tmp = response.data.data;
+                    tmp = tmp.sort((a, b) => {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    })
+                    setDefaultLocation(tmp[0]);
+
                     console.log('test select location', response.data.data[0]);
                     setLocation(response.data.data[0].id);
                 } else {
@@ -295,10 +303,9 @@ export default function CabinetForm(props) {
 
                                 <InputGroup className="my-1 mb-2" id="address" >
 
-                                    <Form.Control as="select" defaultValue={currentCabinet ? currentCabinet.locationId : locations[0]?.id} custom
+                                    <Form.Control as="select" value={currentCabinet ? currentCabinet.locationId : defaultLocation?.id} custom
                                         onChange={(e) => {
                                             let text = e.target.value;
-
                                             setLocation(text);
                                             console.log("change location..from", text);
                                             console.log("change location..to", location);

@@ -29,6 +29,8 @@ export default function Transaction() {
     var sapmle = require('../../sampleData/transactionStatus.json');
 
 
+
+
     // for paging
 
     let [currentProcessPage, setCurrentProcessPage] = useState(1);
@@ -52,6 +54,8 @@ export default function Transaction() {
         loadData();
     }, []);
 
+
+
     const loadData = () => {
         console.log("###reload data...")
         API.getTransaction()
@@ -74,15 +78,7 @@ export default function Transaction() {
     }
 
 
-    // for confirm diaglog
-    const handleDelete = (currentTransaction) => {
-        setOpenConfirm(true);
-        if (currentTransaction) {
-            setCurrentTransaction(currentTransaction);
-        } else {
-            setCurrentTransaction(null);
-        }
-    }
+
     const requestDelete = (username) => {
         setTimeout(() => {
 
@@ -163,7 +159,7 @@ export default function Transaction() {
                     <Collapse in={isBasic}>
                         <Row>
 
-                            <Col md={12}>
+                            <Col md={6}>
 
                                 <div id="basic-collapse">
                                     <div>

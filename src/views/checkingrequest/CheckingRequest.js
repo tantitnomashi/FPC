@@ -225,10 +225,10 @@ export default function Request() {
                                                     <img className="rounded-circle" style={{ width: '40px' }} src={avatar1} alt="activity-user" />
                                                 </td>
                                                 <td className="col-md-3 ">
-                                                    <h6 className="mb-1"> {request.cabinetName} - Box {request.boxNum}</h6>
-                                                    <p className="m-0 d-flex align-items-center">
-                                                        {(request?.requestType == 0) && <span>Check Box</span>}
-                                                        {(request?.requestType == 1) && <span>Check Connection</span>}
+                                                    <h6 className="mb-1"> {request.cabinetName} </h6>
+                                                    <div className="m-0 d-flex align-items-center">
+                                                        {(request?.requestType == 0) && <span>Check Connection</span>}
+                                                        {(request?.requestType == 1) && <span>Check Box</span>}
                                                         {(request?.requestType == 2) && <span>Check Expired Items</span>}
                                                         <span className="material-icons f-20 px-2">
                                                             assignment_ind
@@ -236,7 +236,7 @@ export default function Request() {
 
                                                         {request.assigneeFullName}
 
-                                                    </p>
+                                                    </div>
                                                 </td>
                                                 <td className="col-md-3 text-dark d-flex align-items-center">
 

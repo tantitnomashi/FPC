@@ -143,7 +143,7 @@ export default function TemplateForm(props) {
         console.log("#DATA VIEW", dataView);
         console.log("#DATA VIEW ARR", dataArrView);
 
-        if (dataArrView?.length) {
+        if (dataArrView?.lengthc) {
             for (var i = 0; i < dataArrView?.length; i++) {
                 //+1 cause index from 0, -1 cause  the root size
                 if (maxCol < (dataArrView[i].index % MAX_COL_NUM + 1 + dataArrView[i].virtualWidth - 1)) {

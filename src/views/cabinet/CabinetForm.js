@@ -420,7 +420,7 @@ export default function CabinetForm(props) {
                                 />
 
                                 <Form.Label column lg={12}>Default Staff</Form.Label>
-                                <Form.Control as="select" custom defaultValue={users[0]?.userName}
+                                <Form.Control as="select" custom defaultValue={currentCabinet ? currentCabinet.defaultAssignedStaff : users[0]?.userName}
                                     onChange={(e) => {
                                         let text = e.target.value;
 
@@ -452,6 +452,8 @@ export default function CabinetForm(props) {
                                     disabled={false}
                                     inputProps={{ 'aria-label': 'primary checkbox' }}
                                 />
+
+
                                 {/* <Form.Label column lg={12}> Is Free Renting </Form.Label>
 
                                 <Switch

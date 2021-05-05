@@ -55,6 +55,16 @@ export default function TemplateForm(props) {
 
     const handleRenderBoxDesign = (cellNum) => {
         let currentData = dataArrView;
+        let isExisted = false;
+        dataArrView.map(value => {
+            if (value.index == cellNum) {
+                isExisted = true;
+            }
+        })
+
+        if (isExisted) {
+            return;
+        }
         if (!isAddCompleted) {
 
         } else {
@@ -133,17 +143,19 @@ export default function TemplateForm(props) {
         console.log("#DATA VIEW", dataView);
         console.log("#DATA VIEW ARR", dataArrView);
 
+        if (dataArrView?.length) {
+            for (var i = 0; i < dataArrView?.length; i++) {
+                //+1 cause index from 0, -1 cause  the root size
+                if (maxCol < (dataArrView[i].index % MAX_COL_NUM + 1 + dataArrView[i].virtualWidth - 1)) {
+                    maxCol = (dataArrView[i].index % MAX_COL_NUM + 1 + dataArrView[i].virtualWidth - 1)
+                }
+                if (maxRow < (Math.floor(dataArrView[i].index / MAX_ROW_NUM + 1) + dataArrView[i].virtualHeight - 1)) {
+                    maxRow = (Math.floor(dataArrView[i].index / MAX_ROW_NUM + 1) + dataArrView[i].virtualHeight - 1)
+                }
 
-        for (var i = 0; i < dataArrView?.length; i++) {
-            //+1 cause index from 0, -1 cause  the root size
-            if (maxCol < (dataArrView[i].index % MAX_COL_NUM + 1 + dataArrView[i].virtualWidth - 1)) {
-                maxCol = (dataArrView[i].index % MAX_COL_NUM + 1 + dataArrView[i].virtualWidth - 1)
             }
-            if (maxRow < (Math.floor(dataArrView[i].index / MAX_ROW_NUM + 1) + dataArrView[i].virtualHeight - 1)) {
-                maxRow = (Math.floor(dataArrView[i].index / MAX_ROW_NUM + 1) + dataArrView[i].virtualHeight - 1)
-            }
-
         }
+
         console.log("MAX COL - " + maxCol + " MAX ROW - " + maxRow);
 
         setArrView(arr);
@@ -189,7 +201,8 @@ export default function TemplateForm(props) {
         API.createCabinetTemplate(preTemplate).then((response) => {
             if (response.data.statusCode == 200) {
                 NotificationManager.success('Create template successfully!', 'Create Template');
-                reload(); resetView();
+                reload();
+                resetView();
             } else {
                 NotificationManager.error('Sorry, Cannot create this Template!', 'Create Template')
             }
